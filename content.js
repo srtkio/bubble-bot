@@ -332,8 +332,11 @@
   const RUN = 'bubble-bot-run';
   const saveRun = run => sessionStorage.setItem(RUN, JSON.stringify({ ...run, at: Date.now() }));
   const loadRun = () => {
-    const run = JSON.parse(sessionStorage.getItem(RUN) || 'null');
-    return run && Date.now() - run.at < 30 * 60 * 1000 ? run : null; // an abandoned run must not wake up later
+    let run = null;
+    try { run = JSON.parse(sessionStorage.getItem(RUN)); } catch { /* not ours, or damaged */ }
+    // Page scripts can write sessionStorage too, so the saved list address is only trusted when it is on this portal.
+    if (!run || !Array.isArray(run.tried) || !String(run.list).startsWith(location.origin + '/')) return null;
+    return Date.now() - run.at < 30 * 60 * 1000 ? run : null; // an abandoned run must not wake up later
   };
 
   // Every question row of the list. Each row starts with the portal's own status icon:
