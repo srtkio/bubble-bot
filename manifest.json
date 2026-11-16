@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Bubble",
+  "version": "1.0.0",
+  "description": "Fills quiz answers and solves coding questions on the Newton School portal, using free AI models.",
+  "icons": { "16": "icons/icon-16.png", "48": "icons/icon-48.png", "128": "icons/icon-128.png" },
+  "host_permissions": [
+    "https://generativelanguage.googleapis.com/*",
+    "https://api.groq.com/*",
+    "https://integrate.api.nvidia.com/*"
+  ],
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    { "matches": ["https://my.newtonschool.co/*"], "js": ["content.js"], "run_at": "document_idle" },
+    { "matches": ["https://my.newtonschool.co/*"], "js": ["page.js"], "world": "MAIN", "run_at": "document_idle" }
+  ],
+  "web_accessible_resources": [
+    { "resources": ["icons/icon-128.png"], "matches": ["https://my.newtonschool.co/*"] }
+  ]
+}
